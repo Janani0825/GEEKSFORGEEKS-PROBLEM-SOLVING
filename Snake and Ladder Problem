@@ -1,0 +1,55 @@
+class Solution {
+    public int minThrows(int n, int[] lad, int[] sn) {
+        int totalCells = n * n;
+        int[] move = new int[totalCells + 1];
+
+        for (int i = 0; i <= totalCells; i++) {
+            move[i] = -1;
+        }
+
+        for (int i = 0; i < lad.length; i += 2) {
+            move[lad[i]] = lad[i + 1];
+        }
+
+        for (int i = 0; i < sn.length; i += 2) {
+            move[sn[i]] = sn[i + 1];
+        }
+
+        boolean[] visited = new boolean[totalCells + 1];
+        java.util.Queue<Integer> queue = new java.util.LinkedList<>();
+
+        queue.add(1);
+        visited[1] = true;
+        int throwsCount = 0;
+
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+
+            for (int i = 0; i < size; i++) {
+                int currentCell = queue.poll();
+
+                if (currentCell == totalCells) {
+                    return throwsCount;
+                }
+
+                for (int dice = 1; dice <= 6; dice++) {
+                    int nextCell = currentCell + dice;
+
+                    if (nextCell <= totalCells) {
+                        if (move[nextCell] != -1) {
+                            nextCell = move[nextCell];
+                        }
+
+                        if (!visited[nextCell]) {
+                            visited[nextCell] = true;
+                            queue.add(nextCell);
+                        }
+                    }
+                }
+            }
+            throwsCount++;
+        }
+
+        return -1;
+    }
+}
